@@ -43,22 +43,29 @@ var findBowerJSON = function (cwd) {
 var findBowerDirectory = function (cwd) {
   var config = bowerConfig.read(cwd);
   var directory = path.join(config.cwd, config.directory);
+  
 
   if (!directory || !grunt.file.isDir(directory)) {
-    console.log(
-      'Cannot find where you keep your Bower packages.' +
-      '\n' +
-      '\nWe tried looking for a `.bowerrc` file, but couldn\'t find a custom' +
-      '\n`directory` property defined. We then tried `bower_components`, but' +
-      '\nit looks like that doesn\'t exist either. As a last resort, we tried' +
-      '\nthe pre-1.0 `components` directory, but that also couldn\'t be found.' +
-      '\n' +
-      '\nUnfortunately, we can\'t proceed without knowing where the Bower' +
-      '\npackages you have installed are.' +
-      '\n'
-    );
 
-    grunt.fail.fatal('No Bower components found.');
+    directory = path.join(config.cwd, 'app', 'bower_components');
+    
+    if(!directory) {
+      console.log(
+        'Cannot find where you keep your Bower packages.' +
+        '\n' +
+        '\nWe tried looking for a `.bowerrc` file, but couldn\'t find a custom' +
+        '\n`directory` property defined. We then tried `bower_components` and `app/bower_components` but' +
+        '\nit looks like that doesn\'t exist either. As a last resort, we tried' +
+        '\nthe pre-1.0 `components` directory, but that also couldn\'t be found.' +
+        '\n' +
+        '\nUnfortunately, we can\'t proceed without knowing where the Bower' +
+        '\npackages you have installed are.' +
+        '\n'
+      );
+      
+      grunt.fail.fatal('No Bower components found.');
+    }
+
   }
 
   return directory;
